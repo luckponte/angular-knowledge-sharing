@@ -21,10 +21,10 @@ describe('UsersService', () => {
 
         usersService = TestBed.inject(UsersService);
         utilsService = TestBed.inject(UtilsService);
-        usersService.users = [{
+        usersService.users$.next([{
             id: '1',
             name: "Foo"
-        }];
+        }]);
     });
 
     it('Creates a service', () => {
@@ -39,7 +39,7 @@ describe('UsersService', () => {
 
         usersService.addUser(newUser);
 
-        expect(usersService.users).toEqual([{
+        expect(usersService.users$.getValue()).toEqual([{
             id: '1',
             name: "Foo"
         }, newUser]);
@@ -48,7 +48,7 @@ describe('UsersService', () => {
     it('Removes an user', () => {
         usersService.removeUser("1");
 
-        expect(usersService.users).toEqual([]);
+        expect(usersService.users$.getValue()).toEqual([]);
     });
     
     it('Gets the usernames', () =>{
@@ -63,7 +63,7 @@ describe('UsersService', () => {
         usersService.getUsernames();
 
         expect(utilsService.pluck).toHaveBeenCalledWith(
-            usersService.users,
+            usersService.users$.getValue(),
             "name"
         );
     });
