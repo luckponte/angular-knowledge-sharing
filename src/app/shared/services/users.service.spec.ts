@@ -1,16 +1,26 @@
 import { UserInteface } from "../types/user.interface";
 import { UsersService } from "./users.service";
 import { TestBed } from "@angular/core/testing";
+import { UtilsService } from "./utils.service";
 
 describe('UsersService', () => {
     let usersService: UsersService;
+    let utilsService: UtilsService;
+    // let utilsServiceMock = {
+    //     pluck: jest.fn(),
+    // };
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            providers: [UsersService]
+            providers: [
+                UsersService,
+                UtilsService
+                // { provide: UtilsService, useValue: utilsServiceMock }
+            ]
         });
 
         usersService = TestBed.inject(UsersService);
+        utilsService = TestBed.inject(UtilsService);
         usersService.users = [{
             id: '1',
             name: "Foo"
@@ -39,5 +49,22 @@ describe('UsersService', () => {
         usersService.removeUser("1");
 
         expect(usersService.users).toEqual([]);
-    })
+    });
+    
+    it('Gets the usernames', () =>{
+        // utilsServiceMock.pluck.mockReturnValue(["João", "Maria"]);
+
+        // const actual = usersService.getUsernames();
+
+        // expect(actual).toEqual(["João", "Maria"]);
+
+        jest.spyOn(utilsService, "pluck");
+
+        usersService.getUsernames();
+
+        expect(utilsService.pluck).toHaveBeenCalledWith(
+            usersService.users,
+            "name"
+        );
+    });
 });
